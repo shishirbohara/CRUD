@@ -38,4 +38,27 @@ router.delete("/student/:id", (req, res) => {
   });
 });
 
+router.put("/student/:id", (req, res) => {
+  const studentId = req.params.id;
+  const { full_name, grade, section, roll_no } = req.body;
+
+  const query = `UPDATE students
+  SET full_name= $1, grade= $2, section= $3, roll_no= $4
+  WHERE id = $5
+  RETURNING *`;
+  const values = [full_name, grade, section, roll_no, studentId];
+
+  client.query(query, values, (err, result) => {
+    if (err) {
+      res.status(501).json({ error: "Error updating student" });
+    }
+    if (!result || result.rowCount === 0) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    res
+      .status(201)
+      .json({ message: "Student update sucess", student: result.rows[0] });
+  });
+});
+
 module.exports = router;
