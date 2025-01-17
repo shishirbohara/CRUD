@@ -8,7 +8,6 @@ require("dotenv").config();
 app.use(express.json());
 
 app.use("/", studentRoutes);
-
 app.use("/", userRoutes);
 
 app.listen(port, () => {
