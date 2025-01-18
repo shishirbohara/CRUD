@@ -2,6 +2,17 @@ const express = require("express");
 const client = require("../db");
 const router = express.Router();
 
+router.get("/student", (req, res) => {
+  const query = `SELECT * FROM students`;
+
+  client.query(query, (err, result) => {
+    if (err) {
+      res.status(500).json({ error: "Failed to get all the students" });
+    }
+    res.status(200).json({ students: result.rows });
+  });
+});
+
 router.post("/student", (req, res) => {
   const { full_name, grade, section, roll_no } = req.body;
 
